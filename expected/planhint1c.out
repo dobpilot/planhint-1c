@@ -1,0 +1,149 @@
+LOAD 'planhint1c';
+create table t(f integer not null,g integer not null);
+create table u(f integer not null,g integer not null);
+create sequence s cache 1000;
+insert into t select 0,s from (select nextval('s') as s) as d;
+insert into t select 0,s from (select nextval('s') as s) as d;
+insert into t select 0,s from (select nextval('s') as s from t,t t1,t t2) as d;
+insert into t select 0,s from (select nextval('s') as s from t,t t1,t t2,t t3) as d;
+insert into u select * from t;
+create unique index t_g on t(g);
+vacuum analyze;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Nested Loop  (cost=0.29..178.43 rows=1 width=4)
+   ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+         Filter: (f = 2)
+   ->  Index Scan using t_g on t  (cost=0.29..8.30 rows=1 width=8)
+         Index Cond: (g = u.g)
+(5 rows)
+
+explain select '&gH2^7l_q2',t.f from t,u where t.g=u.g and u.f=2;
+                          QUERY PLAN                           
+---------------------------------------------------------------
+ Hash Join  (cost=170.14..352.78 rows=1 width=36)
+   Hash Cond: (t.g = u.g)
+   ->  Seq Scan on t  (cost=0.00..145.10 rows=10010 width=8)
+   ->  Hash  (cost=170.12..170.12 rows=1 width=4)
+         ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+               Filter: (f = 2)
+(6 rows)
+
+explain select t.f from t,u where t.g=u.g and u.f=2;
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Nested Loop  (cost=0.29..178.43 rows=1 width=4)
+   ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+         Filter: (f = 2)
+   ->  Index Scan using t_g on t  (cost=0.29..8.30 rows=1 width=8)
+         Index Cond: (g = u.g)
+(5 rows)
+
+explain select '&gH2^7l_t2',t.f from t,u where t.g=u.g and u.f=2;
+                          QUERY PLAN                           
+---------------------------------------------------------------
+ Hash Join  (cost=170.14..352.78 rows=1 width=36)
+   Hash Cond: (t.g = u.g)
+   ->  Seq Scan on t  (cost=0.00..145.10 rows=10010 width=8)
+   ->  Hash  (cost=170.12..170.12 rows=1 width=4)
+         ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+               Filter: (f = 2)
+(6 rows)
+
+explain select t.f from t,u where t.g=u.g and u.f=2;
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Nested Loop  (cost=0.29..178.43 rows=1 width=4)
+   ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+         Filter: (f = 2)
+   ->  Index Scan using t_g on t  (cost=0.29..8.30 rows=1 width=8)
+         Index Cond: (g = u.g)
+(5 rows)
+
+explain select '&gH2^7l_s2',t.f from t,u where t.g=u.g and u.f=2;
+                          QUERY PLAN                           
+---------------------------------------------------------------
+ Hash Join  (cost=170.14..352.78 rows=1 width=36)
+   Hash Cond: (t.g = u.g)
+   ->  Seq Scan on t  (cost=0.00..145.10 rows=10010 width=8)
+   ->  Hash  (cost=170.12..170.12 rows=1 width=4)
+         ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+               Filter: (f = 2)
+(6 rows)
+
+explain select t.f from t,u where t.g=u.g and u.f=2;
+                          QUERY PLAN                           
+---------------------------------------------------------------
+ Hash Join  (cost=170.14..352.78 rows=1 width=4)
+   Hash Cond: (t.g = u.g)
+   ->  Seq Scan on t  (cost=0.00..145.10 rows=10010 width=8)
+   ->  Hash  (cost=170.12..170.12 rows=1 width=4)
+         ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+               Filter: (f = 2)
+(6 rows)
+
+explain select '&gH2^7l_s3',t.f from t,u where t.g=u.g and u.f=2;
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Nested Loop  (cost=0.29..178.43 rows=1 width=36)
+   ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+         Filter: (f = 2)
+   ->  Index Scan using t_g on t  (cost=0.29..8.30 rows=1 width=8)
+         Index Cond: (g = u.g)
+(5 rows)
+
+explain select t.f from t,u where t.g=u.g and u.f=2;
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Nested Loop  (cost=0.29..178.43 rows=1 width=4)
+   ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+         Filter: (f = 2)
+   ->  Index Scan using t_g on t  (cost=0.29..8.30 rows=1 width=8)
+         Index Cond: (g = u.g)
+(5 rows)
+
+begin transaction;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Nested Loop  (cost=0.29..178.43 rows=1 width=4)
+   ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+         Filter: (f = 2)
+   ->  Index Scan using t_g on t  (cost=0.29..8.30 rows=1 width=8)
+         Index Cond: (g = u.g)
+(5 rows)
+
+explain select '&gH2^7l_t2',t.f from t,u where t.g=u.g and u.f=2;
+                          QUERY PLAN                           
+---------------------------------------------------------------
+ Hash Join  (cost=170.14..352.78 rows=1 width=36)
+   Hash Cond: (t.g = u.g)
+   ->  Seq Scan on t  (cost=0.00..145.10 rows=10010 width=8)
+   ->  Hash  (cost=170.12..170.12 rows=1 width=4)
+         ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+               Filter: (f = 2)
+(6 rows)
+
+explain select t.f from t,u where t.g=u.g and u.f=2;
+                          QUERY PLAN                           
+---------------------------------------------------------------
+ Hash Join  (cost=170.14..352.78 rows=1 width=4)
+   Hash Cond: (t.g = u.g)
+   ->  Seq Scan on t  (cost=0.00..145.10 rows=10010 width=8)
+   ->  Hash  (cost=170.12..170.12 rows=1 width=4)
+         ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+               Filter: (f = 2)
+(6 rows)
+
+COMMIT;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Nested Loop  (cost=0.29..178.43 rows=1 width=4)
+   ->  Seq Scan on u  (cost=0.00..170.12 rows=1 width=4)
+         Filter: (f = 2)
+   ->  Index Scan using t_g on t  (cost=0.29..8.30 rows=1 width=8)
+         Index Cond: (g = u.g)
+(5 rows)
+

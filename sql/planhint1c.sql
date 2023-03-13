@@ -1,0 +1,27 @@
+LOAD 'planhint1c';
+
+create table t(f integer not null,g integer not null);
+create table u(f integer not null,g integer not null);
+create sequence s cache 1000;
+insert into t select 0,s from (select nextval('s') as s) as d;
+insert into t select 0,s from (select nextval('s') as s) as d;
+insert into t select 0,s from (select nextval('s') as s from t,t t1,t t2) as d;
+insert into t select 0,s from (select nextval('s') as s from t,t t1,t t2,t t3) as d;
+insert into u select * from t;
+create unique index t_g on t(g);
+vacuum analyze;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+explain select '&gH2^7l_q2',t.f from t,u where t.g=u.g and u.f=2;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+explain select '&gH2^7l_t2',t.f from t,u where t.g=u.g and u.f=2;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+explain select '&gH2^7l_s2',t.f from t,u where t.g=u.g and u.f=2;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+explain select '&gH2^7l_s3',t.f from t,u where t.g=u.g and u.f=2;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+begin transaction;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+explain select '&gH2^7l_t2',t.f from t,u where t.g=u.g and u.f=2;
+explain select t.f from t,u where t.g=u.g and u.f=2;
+COMMIT;
+explain select t.f from t,u where t.g=u.g and u.f=2;
